@@ -13,20 +13,16 @@ public class NewMethod {
     }
 
     static List<Integer> CreateTopK2(List<Integer> mainRow, List<Integer> newMatrix, int k) {
-
         for (Integer matrix : newMatrix) {
-            if (mainRow.size() < k) {
+            if (mainRow.size() < k)
                 mainRow.add(matrix);
-            }
         }
         return Sorter(mainRow);
     }
 
     static List<Integer> CreateTopKn(List<Integer> mainRow, List<Integer> newMatrix, int k) {
-
         int minNumber = MinFinder(mainRow);
         int count = 0;
-
         for (Integer number : newMatrix) {
             if (number > minNumber) {
                 mainRow.add(number);
@@ -37,7 +33,7 @@ public class NewMethod {
         return mainRow.subList(count, count + k);
     }
 
-    static void TopKMaker() {
+    static void TopK1AndK2Maker() {
 
         List<List<Integer>> allLists = new ArrayList<>();
         int kParameter = Input.getInputValue("Enter the K parameter: ");
@@ -56,15 +52,16 @@ public class NewMethod {
         List<Integer> topK2 = CreateTopK2(mainRow, sortedList1, kParameter);
         System.out.println("The K2 : " + topK2);
 
+        List<Integer> List2 = allLists.get(2);
+        List<Integer> sortedList2 = Sorter(ListMaker(List2));
+        topK3AndHigherMaker(topK2, sortedList2, kParameter);
 
-        for (int i = 1; i < listsNumber; i++) {
-            ListMaker(allLists.get(i));
-        }
+    }
 
-        List<Integer> topK3 = CreateTopKn(topK2, allLists.get(2), kParameter);
+    static void topK3AndHigherMaker(List<Integer> mainRow, List<Integer> newMatrix, int k) {
 
-
-
+        CreateTopKn(mainRow, newMatrix, k);
+        topK3AndHigherMaker(mainRow, newMatrix, k);
     }
 
 
@@ -78,7 +75,7 @@ public class NewMethod {
     }
 
     public static void main(String[] args) {
-        TopKMaker();
+
     }
 
 
