@@ -66,7 +66,7 @@ public class NewMethod {
     public void CreateTopKn(List<Integer> mainRow, List<Integer> newMatrix, int k) {
         int minNumber = MinFinder(mainRow);
 
-        if (isLastRow(mainRow, k)) return;
+        if (currentRowIsLastRow(mainRow, k)) return;
 
         topKMaker(mainRow, newMatrix, minNumber);
         List<Integer> newSortedTopK = Sorter(mainRow.subList(count, count + k));
@@ -90,7 +90,7 @@ public class NewMethod {
         }
     }
 
-    private boolean isLastRow(List<Integer> mainRow, int k) {
+    private boolean currentRowIsLastRow(List<Integer> mainRow, int k) {
         if (currentRow == rowLimit) {
             List<Integer> newSortedTopK = Sorter(mainRow.subList(count, count + k));
             System.out.println("K" + kCounter + " : " + newSortedTopK);
