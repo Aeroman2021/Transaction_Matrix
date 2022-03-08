@@ -4,6 +4,23 @@ import java.util.stream.Collectors;
 
 public class NewMethod {
 
+    private List<List<Integer>> allLists;
+    private int currentRow;
+    private int listNumber;
+    private int rowLimit;
+    private int kCounter = 3;
+    private int count;
+
+    public NewMethod() {
+        this.allLists = new ArrayList<>();
+        currentRow = 3;
+        listNumber = 3;
+    }
+
+    public void setRowLimit(int rowLimit) {
+        this.rowLimit = rowLimit;
+    }
+
     public static List<Integer> Sorter(List<Integer> list) {
         return list.stream().sorted().collect(Collectors.toList());
     }
@@ -12,32 +29,21 @@ public class NewMethod {
         return list.stream().sorted().collect(Collectors.toList()).get(0);
     }
 
-    static List<Integer> CreateTopK2(List<Integer> mainRow, List<Integer> newMatrix, int k) {
+    static List<Integer> TopK2(List<Integer> mainRow, List<Integer> newMatrix, int k) {
         for (Integer matrix : newMatrix) {
-            if (mainRow.size() < k)
+            if (mainRow.size() < k) {
                 mainRow.add(matrix);
+            }
         }
         return Sorter(mainRow);
     }
 
-    static List<Integer> CreateTopKn(List<Integer> mainRow, List<Integer> newMatrix, int k) {
-        int minNumber = MinFinder(mainRow);
-        int count = 0;
-        for (Integer number : newMatrix) {
-            if (number > minNumber) {
-                mainRow.add(number);
-                count++;
-            }
-        }
-        System.out.println(Sorter(mainRow.subList(count, count + k)));
-        return mainRow.subList(count, count + k);
-    }
-
-    static void TopK1AndK2Maker() {
-
-        List<List<Integer>> allLists = new ArrayList<>();
+    public void CreateTopK1AndK2() {
         int kParameter = Input.getInputValue("Enter the K parameter: ");
         int listsNumber = Input.getInputValue("Enter the number of list: ");
+        int rowLimit = Input.getInputValue("Enter row limit: ");
+        setRowLimit(rowLimit);
+
         for (int i = 0; i < listsNumber; i++) {
             ArrayList<Integer> subList = new ArrayList<>();
             allLists.add(subList);
@@ -45,25 +51,54 @@ public class NewMethod {
 
         List<Integer> List0 = allLists.get(0);
         List<Integer> mainRow = Sorter(ListMaker(List0));
-        System.out.println("The K1 : " + mainRow);
+        System.out.println("K1 : " + mainRow);
 
         List<Integer> List1 = allLists.get(1);
-        List<Integer> sortedList1 = Sorter(ListMaker(List1));
-        List<Integer> topK2 = CreateTopK2(mainRow, sortedList1, kParameter);
-        System.out.println("The K2 : " + topK2);
+        List<Integer> newMatrix1 = Sorter(ListMaker(List1));
+        List<Integer> topK2 = TopK2(mainRow, newMatrix1, kParameter);
+        System.out.println("K2 : " + topK2);
 
         List<Integer> List2 = allLists.get(2);
-        List<Integer> sortedList2 = Sorter(ListMaker(List2));
-        topK3AndHigherMaker(topK2, sortedList2, kParameter);
-
+        List<Integer> newMatrix2 = Sorter(ListMaker(List2));
+        CreateTopKn(topK2, newMatrix2, kParameter);
     }
 
-    static void topK3AndHigherMaker(List<Integer> mainRow, List<Integer> newMatrix, int k) {
+    public void CreateTopKn(List<Integer> mainRow, List<Integer> newMatrix, int k) {
+        int minNumber = MinFinder(mainRow);
 
-        CreateTopKn(mainRow, newMatrix, k);
-        topK3AndHigherMaker(mainRow, newMatrix, k);
+        if (isLastRow(mainRow, k)) return;
+
+        topKMaker(mainRow, newMatrix, minNumber);
+        List<Integer> newSortedTopK = Sorter(mainRow.subList(count, count + k));
+        System.out.println("K" + kCounter + " : " + newSortedTopK);
+        allLists.add(newSortedTopK);
+        listNumber++;
+        kCounter++;
+        currentRow++;
+        List<Integer> newSortedInputList = Sorter(ListMaker(allLists.get(listNumber)));
+        CreateTopKn(newSortedTopK, newSortedInputList,k);
     }
 
+
+
+    private void topKMaker(List<Integer> mainRow, List<Integer> newMatrix, int minNumber) {
+        for (Integer number : newMatrix) {
+            if (number > minNumber) {
+                mainRow.add(number);
+                count++;
+            }
+        }
+    }
+
+    private boolean isLastRow(List<Integer> mainRow, int k) {
+        if (currentRow == rowLimit) {
+            List<Integer> newSortedTopK = Sorter(mainRow.subList(count, count + k));
+            System.out.println("K" + kCounter + " : " + newSortedTopK);
+            allLists.add(newSortedTopK);
+            return true;
+        }
+        return false;
+    }
 
     private static List<Integer> ListMaker(List<Integer> inputList) {
         int listLength = Input.getInputValue("Enter list length");
@@ -73,10 +108,5 @@ public class NewMethod {
         }
         return inputList;
     }
-
-    public static void main(String[] args) {
-
-    }
-
 
 }
