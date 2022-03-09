@@ -26,7 +26,7 @@ public class NewMethod {
     }
 
     public static Integer MinFinder(List<Integer> list) {
-        return list.stream().sorted().collect(Collectors.toList()).get(0);
+        return Sorter( list).get(0);
     }
 
     static List<Integer> TopK2(List<Integer> mainRow, List<Integer> newMatrix, int k) {
@@ -44,10 +44,7 @@ public class NewMethod {
         int rowLimit = Input.getInputValue("Enter row limit: ");
         setRowLimit(rowLimit);
 
-        for (int i = 0; i < listsNumber; i++) {
-            ArrayList<Integer> subList = new ArrayList<>();
-            allLists.add(subList);
-        }
+        sublistCreator(listsNumber);
 
         List<Integer> List0 = allLists.get(0);
         List<Integer> mainRow = Sorter(ListMaker(List0));
@@ -62,6 +59,14 @@ public class NewMethod {
         List<Integer> newMatrix2 = Sorter(ListMaker(List2));
         CreateTopKn(topK2, newMatrix2, kParameter);
     }
+
+    private void sublistCreator(int listsNumber) {
+        for (int i = 0; i < listsNumber; i++) {
+            ArrayList<Integer> subList = new ArrayList<>();
+            allLists.add(subList);
+        }
+    }
+
 
     public void CreateTopKn(List<Integer> mainRow, List<Integer> newMatrix, int k) {
         int minNumber = MinFinder(mainRow);
@@ -78,8 +83,6 @@ public class NewMethod {
         List<Integer> newSortedInputList = Sorter(ListMaker(allLists.get(listNumber)));
         CreateTopKn(newSortedTopK, newSortedInputList,k);
     }
-
-
 
     private void topKMaker(List<Integer> mainRow, List<Integer> newMatrix, int minNumber) {
         for (Integer number : newMatrix) {
